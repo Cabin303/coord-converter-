@@ -5,12 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#202632">
+<meta name="application-name" content="Коорд">
 
 <!-- iOS support -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Координаты">
-<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="icon_v2.png">
+<link rel="apple-touch-icon" href="icon_v2.png">
 <title>Координатный конвертер</title>
 <style>
 body {
@@ -237,7 +239,7 @@ applyTheme();
 
 // регистрация service worker
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js')
+    navigator.serviceWorker.register('sw.js?v=2')
         .then(() => console.log('SW зарегистрирован'))
         .catch(() => console.log('SW ошибка'));
 }
