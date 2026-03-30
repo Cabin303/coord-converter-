@@ -161,11 +161,15 @@ body.dark button.toggle {
 Используется в приложениях, картах (Google Maps, погода, API).
 </p>
 <div class="row">
-<input type="number" placeholder="Градусы" id="dmm_deg">
-<input type="number" step="0.001" placeholder="Минуты" id="dmm_min">
+<input type="number" placeholder="Широта: градусы" id="dmm_deg_lat">
+<input type="number" step="0.001" placeholder="Широта: минуты" id="dmm_min_lat">
+</div>
+<div class="row">
+<input type="number" placeholder="Долгота: градусы" id="dmm_deg_lon">
+<input type="number" step="0.001" placeholder="Долгота: минуты" id="dmm_min_lon">
 </div>
 <button onclick="dmmToDd()">Конвертировать</button>
-<br>Результат: <span id="dmm_dd"></span>
+<br>Результат: <span id="dmm_dd_lat"></span> , <span id="dmm_dd_lon"></span>
 </div>
 
 <div class="section">
@@ -173,9 +177,10 @@ body.dark button.toggle {
 <p style="opacity:0.8;font-size:14px;">
 Используется в навигации и GPS-приборах (основной морской формат).
 </p>
-<input type="number" step="0.000001" placeholder="Десятичные градусы" id="dd_val">
+<input type="number" step="0.000001" placeholder="Широта (десятичные)" id="dd_lat">
+<input type="number" step="0.000001" placeholder="Долгота (десятичные)" id="dd_lon">
 <button onclick="ddToDmm()">Конвертировать</button>
-<br>Результат: <span id="dd_min"></span>
+<br>Результат: <span id="dd_lat_res"></span> , <span id="dd_lon_res"></span>
 </div>
 
 <div class="section">
@@ -238,26 +243,43 @@ if ('serviceWorker' in navigator) {
 }
 
 function dmmToDd() {
-    let deg = parseFloat((document.getElementById("dmm_deg").value || "").replace(',', '.'));
-    let min = parseFloat((document.getElementById("dmm_min").value || "").replace(',', '.'));
-    if (min >= 60 || min < 0) {
+    let degLat = parseFloat((document.getElementById("dmm_deg_lat").value || "").replace(',', '.'));
+    let minLat = parseFloat((document.getElementById("dmm_min_lat").value || "").replace(',', '.'));
+    let degLon = parseFloat((document.getElementById("dmm_deg_lon").value || "").replace(',', '.'));
+    let minLon = parseFloat((document.getElementById("dmm_min_lon").value || "").replace(',', '.'));
+
+    if (minLat >= 60 || minLat < 0 || minLon >= 60 || minLon < 0) {
         alert("Минуты должны быть от 0 до 59.999");
         return;
     }
-    let dd = deg + (min / 60);
-    document.getElementById("dmm_dd").innerText = dd.toFixed(6);
+
+    let ddLat = degLat + (minLat / 60);
+    let ddLon = degLon + (minLon / 60);
+
+    document.getElementById("dmm_dd_lat").innerText = ddLat.toFixed(6);
+    document.getElementById("dmm_dd_lon").innerText = ddLon.toFixed(6);
 }
 
 function ddToDmm() {
-    let dd = parseFloat((document.getElementById("dd_val").value || "").replace(',', '.'));
-    if (isNaN(dd)) {
-        alert("Введите корректное число");
+    let ddLat = parseFloat((document.getElementById("dd_lat").value || "").replace(',', '.'));
+    let ddLon = parseFloat((document.getElementById("dd_lon").value || "").replace(',', '.'));
+
+    if (isNaN(ddLat) || isNaN(ddLon)) {
+        alert("Введите корректные координаты");
         return;
     }
-    let deg = Math.trunc(dd);
-    let min = (dd - deg) * 60;
-    document.getElementById("dd_min").innerText =
-        deg + "° " + min.toFixed(3) + "'";
+
+    let degLat = Math.trunc(ddLat);
+    let minLat = (ddLat - degLat) * 60;
+
+    let degLon = Math.trunc(ddLon);
+    let minLon = (ddLon - degLon) * 60;
+
+    document.getElementById("dd_lat_res").innerText =
+        degLat + "° " + minLat.toFixed(3) + "'";
+
+    document.getElementById("dd_lon_res").innerText =
+        degLon + "° " + minLon.toFixed(3) + "'";
 }
 
 function dmmToDms() {
